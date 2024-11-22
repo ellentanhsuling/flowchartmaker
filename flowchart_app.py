@@ -2,7 +2,60 @@ import streamlit as st
 import graphviz
 import json
 
-# [Previous functions remain unchanged]
+def load_default_nodes():
+    return {
+        'A': 'Identify Signs of\nEscalating Behavior',
+        'B': 'Is behavior\nthreatening?',
+        'C': 'Immediate Action\nRequired',
+        'D': 'Preventive\nMeasures',
+        'E': 'Use De-escalation\nTechniques',
+        'F': 'Monitor\nSituation',
+        'G': 'Ensure Class\nSafety',
+        'H': 'Alert Security/Admin',
+        'I': 'Is situation\ncontained?',
+        'J': 'Document\nIncident',
+        'K': 'Implement\nEmergency Protocol',
+        'L': 'Evacuate\nOther Students',
+        'M': 'Contact Law\nEnforcement',
+        'N': 'Follow-up\nActions',
+        'O': 'Student Support\nPlan',
+        'P': 'Parent\nConference',
+        'Q': 'Review & Update\nProtocol'
+    }
+
+def load_default_edges():
+    return [
+        ('A', 'B', ''),
+        ('B', 'C', 'Yes'),
+        ('B', 'D', 'No'),
+        ('D', 'E', ''),
+        ('E', 'F', ''),
+        ('C', 'G', ''),
+        ('G', 'H', ''),
+        ('H', 'I', ''),
+        ('I', 'J', 'Yes'),
+        ('I', 'K', 'No'),
+        ('K', 'L', ''),
+        ('L', 'M', ''),
+        ('J', 'N', ''),
+        ('N', 'O', ''),
+        ('O', 'P', ''),
+        ('P', 'Q', '')
+    ]
+
+def create_flowchart(nodes, edges):
+    dot = graphviz.Digraph()
+    dot.attr(rankdir='TB')
+    
+    # Add nodes
+    for node_id, label in nodes.items():
+        dot.node(node_id, label)
+    
+    # Add edges
+    for source, target, label in edges:
+        dot.edge(source, target, label)
+    
+    return dot
 
 def main():
     st.title('Editable Violent Incident Management Protocol')

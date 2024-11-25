@@ -47,9 +47,10 @@ def create_flowchart(nodes, edges):
     dot = graphviz.Digraph()
     dot.attr(rankdir='TB')
     
-    # Add nodes
+    # Add nodes with ID labels
     for node_id, label in nodes.items():
-        dot.node(node_id, label)
+        labeled_node = f"Node {node_id}:\n{label}"
+        dot.node(node_id, labeled_node)
     
     # Add edges
     for source, target, label in edges:
@@ -99,26 +100,30 @@ def main():
         
         # Edit nodes
         st.subheader('Edit Nodes')
-        st.info('Edit the text for each node below:')
+        st.info('Edit the text for each node below (Node ID shown for reference):')
         for node_id in st.session_state.nodes:
+            st.text(f'Node ID: {node_id}')
             st.session_state.nodes[node_id] = st.text_area(
-                f'Node {node_id}',
+                f'Description for Node {node_id}',
                 st.session_state.nodes[node_id],
                 key=f'node_{node_id}'
             )
+            st.divider()
         
         # Edit edges
         st.subheader('Edit Edges')
         st.info('Modify connections between nodes:')
         for idx, (source, target, label) in enumerate(st.session_state.edges):
+            st.text(f'Edge {idx + 1}:')
             col1, col2, col3 = st.columns(3)
             with col1:
-                new_source = st.text_input(f'Source {idx}', source, key=f'source_{idx}')
+                new_source = st.text_input(f'Source Node {idx}', source, key=f'source_{idx}')
             with col2:
-                new_target = st.text_input(f'Target {idx}', target, key=f'target_{idx}')
+                new_target = st.text_input(f'Target Node {idx}', target, key=f'target_{idx}')
             with col3:
                 new_label = st.text_input(f'Label {idx}', label, key=f'label_{idx}')
             st.session_state.edges[idx] = (new_source, new_target, new_label)
+            st.divider()
         
         # Add new node
         st.subheader('Add New Node')
@@ -131,8 +136,8 @@ def main():
         # Add new edge
         st.subheader('Add New Edge')
         st.info('Connect nodes with a new line:')
-        new_edge_source = st.text_input('New Edge Source')
-        new_edge_target = st.text_input('New Edge Target')
+        new_edge_source = st.text_input('New Edge Source Node')
+        new_edge_target = st.text_input('New Edge Target Node')
         new_edge_label = st.text_input('New Edge Label')
         if st.button('Add Edge') and new_edge_source and new_edge_target:
             st.session_state.edges.append((new_edge_source, new_edge_target, new_edge_label))
